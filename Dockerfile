@@ -12,7 +12,6 @@ RUN go mod download
 
 # Copy the main application code and templates
 COPY main.go ./
-COPY templates ./templates
 
 # Build the application with CGO disabled for compatibility with Alpine
 RUN CGO_ENABLED=0 GOOS=linux go build -o world-clock
@@ -28,7 +27,7 @@ WORKDIR /app
 
 # Copy the binary and templates from the builder image
 COPY --from=builder /app/world-clock /app/world-clock
-COPY --from=builder /app/templates /app/templates
+COPY index.html .
 
 # Expose port 8080
 EXPOSE 8080
