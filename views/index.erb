@@ -3,23 +3,65 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Agenda de Contactos</title>
+  <title>World Clock</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      padding: 20px;
+    }
+    .clock {
+      margin: 10px;
+      font-size: 24px;
+      padding: 10px;
+      display: inline-block;
+      width: 200px;
+      border: 2px solid #ccc;
+      border-radius: 5px;
+    }
+  </style>
 </head>
 <body>
-  <h1>Agenda de Contactos</h1>
-  <a href="/contacts/new">Add New Contact</a>
+  <h1>World Clock</h1>
+  <div id="clocks">
+    <!-- Los relojes para cada zona horaria se cargarán aquí -->
+  </div>
 
-  <ul>
-    <% @contacts.each_with_index do |contact, index| %>
-      <li>
-        <strong><%= contact.name %></strong> - <%= contact.email %> - <%= contact.phone %>
-        <a href="/contacts/<%= index %>/edit">Edit</a> |
-        <form action="/contacts/<%= index %>" method="POST" style="display:inline;">
-          <input type="hidden" name="_method" value="delete">
-          <button type="submit">Delete</button>
-        </form>
-      </li>
-    <% end %>
-  </ul>
+  <script>
+    const zones = [
+      'America/New_York',
+      'Europe/London',
+      'Asia/Tokyo',
+      'Australia/Sydney',
+      'Africa/Johannesburg',
+      'Europe/Paris'
+    ];
+
+    function fetchTime(zone) {
+      fetch(`/time/${zone}`)
+        .then(response => response.json())
+        .then(data => {
+          document.getElementById(zone).innerText = `${zone}: ${data}`;
+        })
+        .catch(error => console.error('Error fetching time:', error));
+    }
+
+    function createClock(zone) {
+      const clockDiv = document.createElement('div');
+      clockDiv.id = zone;
+      clockDiv.classList.add('clock');
+      clockDiv.innerText = `${zone}: Loading...`;
+      document.getElementById('clocks').appendChild(clockDiv);
+      fetchTime(zone);
+    }
+
+    // Crear relojes para cada zona horaria
+    zones.forEach(zone => createClock(zone));
+
+    // Actualizar la hora cada 30 segundos
+    setInterval(() => {
+      zones.forEach(zone => fetchTime(zone));
+    }, 30000);
+  </script>
 </body>
 </html>
