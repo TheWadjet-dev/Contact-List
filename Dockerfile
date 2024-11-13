@@ -19,9 +19,6 @@ RUN go build -o world-clock
 # Use a minimal image for running the application
 FROM alpine:latest
 
-# Install ca-certificates (required for Go web servers)
-RUN apk add --no-cache ca-certificates
-
 # Set the working directory
 WORKDIR /app
 
