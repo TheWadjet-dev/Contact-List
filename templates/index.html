@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>World Clock</title>
+</head>
+<body>
+    <h1>World Clock</h1>
+    <form id="timezoneForm">
+        <label for="timezone">Enter Timezone (e.g., America/New_York):</label>
+        <input type="text" id="timezone" name="timezone" required>
+        <button type="submit">Get Time</button>
+    </form>
+    <div id="result"></div>
+
+    <script>
+        document.getElementById('timezoneForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const timezone = document.getElementById('timezone').value;
+            try {
+                const response = await fetch(`/time/${timezone}`);
+                const data = await response.json();
+
+                if (response.ok) {
+                    document.getElementById('result').innerHTML = `
+                        <h2>Time in ${data.timezone}</h2>
+                        <p>Current Time: ${data.current_time}</p>
+                    `;
+                } else {
+                    document.getElementById('result').innerHTML = `
+                        <h2>Error</h2>
+                        <p>${data.error}</p>
+                    `;
+                }
+            } catch (error) {
+                document.getElementById('result').innerHTML = `
+                    <h2>Error</h2>
+                    <p>Failed to fetch the time. Please try again.</p>
+                `;
+            }
+        });
+    </script>
+</body>
+</html>

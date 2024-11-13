@@ -1,35 +1,31 @@
-# Use an official Rust image as the build environment
-FROM rust:1.71 AS builder
+# Use an official Go image as the build environment
+FROM golang:1.20 AS builder
 
 # Set the working directory
 WORKDIR /app
 
-# Copy the Cargo.toml and Cargo.lock to cache dependencies
-COPY Cargo.toml .
+# Copy the go.mod and go.sum files and download dependencies
+COPY go.mod go.sum ./
+RUN go mod download
 
-# Create a dummy main file to cache dependencies
-RUN mkdir src && echo "fn main() {}" > src/main.rs
+# Copy the source code and templates
+COPY . .
 
-# Build the dependencies only
-RUN cargo build --release
-
-# Now copy the actual source code
-COPY src ./src
-
-# Build the application with the actual code
-RUN cargo build --release
+# Build the Go application
+RUN go build -o world-clock-go
 
 # Use a minimal image for running the application
-FROM debian:buster-slim
+FROM alpine:latest
 
 # Set the working directory
 WORKDIR /app
 
-# Copy the binary from the builder image
-COPY --from=builder /app/target/release/world-clock /app/world-clock
+# Copy the binary and templates from the builder image
+COPY --from=builder /app/world-clock-go /app/world-clock-go
+COPY --from=builder /app/templates /app/templates
 
 # Expose port 8080
 EXPOSE 8080
 
 # Run the application
-CMD ["./world-clock"]
+CMD ["./world-clock-go"]
