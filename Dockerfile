@@ -4,11 +4,18 @@ FROM golang:1.20 AS builder
 # Set the working directory
 WORKDIR /app
 
-# Copy the go.mod and go.sum files and download dependencies
-COPY main.go .
+# Copy go.mod and go.sum files
+COPY go.mod go.sum ./
+
+# Download dependencies
+RUN go mod download
+
+# Copy the main application code and templates
+COPY main.go ./
+COPY templates ./templates
 
 # Build the application with CGO disabled for compatibility with Alpine
-RUN CGO_ENABLED=0 GOOS=linux go build -o world-clock main.go
+RUN CGO_ENABLED=0 GOOS=linux go build -o world-clock
 
 # Use a minimal image for running the application
 FROM alpine:latest
@@ -20,11 +27,11 @@ RUN apk add --no-cache ca-certificates
 WORKDIR /app
 
 # Copy the binary and templates from the builder image
-COPY --from=builder /app/blackjack .
-COPY index.html .
+COPY --from=builder /app/world-clock /app/world-clock
+COPY --from=builder /app/templates /app/templates
 
 # Expose port 8080
-EXPOSE 8010
+EXPOSE 8080
 
 # Run the application
 CMD ["./world-clock"]
