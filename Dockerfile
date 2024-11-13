@@ -11,7 +11,7 @@ COPY main.go .
 COPY . .
 
 # Build the application with CGO disabled for compatibility with Alpine
-RUN CGO_ENABLED=0 GOOS=linux go build -o world-clock-go main.go
+RUN CGO_ENABLED=0 GOOS=linux go build -o world-clock main.go
 
 # Use a minimal image for running the application
 FROM alpine:latest
@@ -23,11 +23,11 @@ RUN apk add --no-cache ca-certificates
 WORKDIR /app
 
 # Copy the binary and templates from the builder image
-COPY --from=builder /app/world-clock-go /app/world-clock-go
-COPY --from=builder /app/templates /app/templates
+COPY --from=builder /app/world-clock-go /app/world-clock .
+COPY --from=builder /app/templates /app/templates .
 
 # Expose port 8080
 EXPOSE 8080
 
 # Run the application
-CMD ["./world-clock-go"]
+CMD ["./world-clock"]
