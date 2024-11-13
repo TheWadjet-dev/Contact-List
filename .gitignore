@@ -1,0 +1,17 @@
+# Ignore editor temporary files
+*.swp
+*.swo
+
+# Ignore local gem configuration files
+.bundle/
+vendor/bundle/
+
+# Ignore log files
+log/*.log
+
+# Ignore local config files
+config/database.yml
+config/secrets.yml
+
+# Ignore dependency lock files
+Gemfile.lock
