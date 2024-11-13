@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Agenda de Contactos</title>
+</head>
+<body>
+  <h1>Agenda de Contactos</h1>
+  <a href="/contacts/new">Add New Contact</a>
+
+  <ul>
+    <% @contacts.each_with_index do |contact, index| %>
+      <li>
+        <strong><%= contact.name %></strong> - <%= contact.email %> - <%= contact.phone %>
+        <a href="/contacts/<%= index %>/edit">Edit</a> |
+        <form action="/contacts/<%= index %>" method="POST" style="display:inline;">
+          <input type="hidden" name="_method" value="delete">
+          <button type="submit">Delete</button>
+        </form>
+      </li>
+    <% end %>
+  </ul>
+</body>
+</html>
