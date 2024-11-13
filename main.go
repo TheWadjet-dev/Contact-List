@@ -43,7 +43,7 @@ func getTime(c *gin.Context) {
 
 // Handler to render the HTML page
 func renderHomePage(c *gin.Context) {
-	tmpl, err := template.ParseFiles("templates/index.html")
+	tmpl, err := template.ParseFiles("index.html")
 	if err != nil {
 		c.String(http.StatusInternalServerError, "Error loading template")
 		return
