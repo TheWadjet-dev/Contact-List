@@ -23,6 +23,7 @@ GEM
     tilt (2.4.0)
     tzinfo (2.0.6)
       concurrent-ruby (~> 1.0)
+    webrick (1.9.0)
 
 PLATFORMS
   ruby
@@ -32,6 +33,7 @@ DEPENDENCIES
   rackup
   sinatra
   tzinfo
+  webrick
 
 RUBY VERSION
    ruby 3.3.4p94
