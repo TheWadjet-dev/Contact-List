@@ -14,7 +14,7 @@ RUN go mod download
 COPY main.go ./
 
 # Build the application with CGO disabled for compatibility with Alpine
-RUN CGO_ENABLED=0 GOOS=linux go build -o world-clock
+RUN go build -o world-clock
 
 # Use a minimal image for running the application
 FROM alpine:latest
