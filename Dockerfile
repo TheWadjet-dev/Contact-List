@@ -1,26 +1,27 @@
-# Use an official OpenJDK runtime as a parent image
-FROM openjdk:11-jdk
+# Use an official Rust image as the build environment
+FROM rust:1.71 AS builder
 
-# Set the working directory inside the container
+# Set the working directory
 WORKDIR /app
 
-# Copy the build.sbt and project files to the working directory
-COPY build.sbt ./
-COPY project ./project
-
-# Copy the source code to the working directory
+# Copy the Cargo.toml and source code to the container
+COPY Cargo.toml ./
 COPY src ./src
 
-# Install sbt (Scala Build Tool)
-RUN apt-get update && \
-    apt-get install -y curl && \
-    curl -L -o sbt.deb https://scala.jfrog.io/artifactory/debian/sbt-1.5.5.deb && \
-    apt-get install -y ./sbt.deb && \
-    sbt compile && \
-    sbt stage
+# Build the application
+RUN cargo build --release
+
+# Use a minimal image for running the application
+FROM debian:buster-slim
+
+# Set the working directory
+WORKDIR /app
+
+# Copy the binary from the builder image
+COPY --from=builder /app/target/release/world-clock /app/world-clock
 
 # Expose port 8080
 EXPOSE 8080
 
-# Define the command to run the app
-CMD ["sbt", "run"]
+# Run the application
+CMD ["./world-clock"]
