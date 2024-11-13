@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>World Clock</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      padding: 20px;
+    }
+    h1 {
+      color: #2c3e50;
+    }
+    table {
+      margin: 0 auto;
+      border-collapse: collapse;
+    }
+    th, td {
+      padding: 10px 20px;
+      border: 1px solid #ccc;
+    }
+    th {
+      background-color: #f2f2f2;
+    }
+    td {
+      background-color: #fafafa;
+    }
+  </style>
+</head>
+<body>
+  <h1>World Clock</h1>
+  <table>
+    <thead>
+      <tr>
+        <th>City</th>
+        <th>Time</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @times.each do |city, time| %>
+        <tr>
+          <td><%= city %></td>
+          <td><%= time %></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</body>
+</html>
