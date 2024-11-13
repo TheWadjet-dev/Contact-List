@@ -5,17 +5,19 @@ FROM golang:1.20 AS builder
 WORKDIR /app
 
 # Copy the go.mod and go.sum files and download dependencies
-COPY go.mod go.sum ./
-RUN go mod download
+COPY main.go .
 
 # Copy the source code and templates
 COPY . .
 
-# Build the Go application
-RUN go build -o world-clock-go
+# Build the application with CGO disabled for compatibility with Alpine
+RUN CGO_ENABLED=0 GOOS=linux go build -o blackjack main.go
 
 # Use a minimal image for running the application
 FROM alpine:latest
+
+# Install ca-certificates (required for Go web servers)
+RUN apk add --no-cache ca-certificates
 
 # Set the working directory
 WORKDIR /app
