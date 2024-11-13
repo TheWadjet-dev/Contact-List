@@ -1,9 +1,9 @@
 # Usamos una imagen oficial de Ruby como base
-FROM ruby:3.1-slim
+FROM ruby:3.1
 
 # Instalar dependencias necesarias para la aplicación
 # En este caso, vamos a necesitar curl para descargar las gemas y build-essential para compilar algunas dependencias
-RUN apt-get update -qq && apt-get install -y build-essential libpq-dev curl && rm -rf /var/lib/apt/lists/*
+RUN apt-get update -qq && apt-get install -y build-essential curl && rm -rf /var/lib/apt/lists/*
 
 # Crear un directorio de trabajo para nuestra aplicación
 WORKDIR /usr/src/app
